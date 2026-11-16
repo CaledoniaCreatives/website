@@ -1,0 +1,714 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   GLOBAL CSS CUSTOM PROPERTIES
+   Strictly two-tone + one constant accent — no light/white panel.
+   --bg-color / --text-color are now set PER-CARD via [data-theme] below
+   (discrete layers in a stack, not a continuous cross-fade target), so
+   nothing in JS interpolates these anymore. --accent-color stays constant
+   site-wide for UI chrome (cursor, pagination accents) regardless of
+   which card is in view.
+   ========================================================================== */
+:root {
+  --bg-color: #111111;     /* Obsidian Black — page-level default/fallback */
+  --text-color: #F9F9F7;   /* Chalk — kept only as a text/foreground value, never a panel bg */
+  --accent-color: #4E1A4E; /* Imperial Tyrian */
+
+  /* Context background — visible behind/between pinned cards during the
+     stack sequence, and the header/footer bars. Pure Obsidian — same
+     value as --bg-color — so nothing outside the two confirmed colors
+     ever shows on the page. */
+  --context-bg: #111111;
+
+  /* Pairing A, confirmed: Fraunces / Inter — real, loaded Google Fonts
+     (linked in index.html), not placeholder names. */
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Inter", "Helvetica Neue", sans-serif;
+}
+
+/* Per-card theme tokens — two values only. */
+[data-theme="dark"] {
+  --bg-color: #111111;
+  --text-color: #F9F9F7;
+}
+
+[data-theme="purple"] {
+  --bg-color: #4E1A4E;
+  --text-color: #F9F9F7;
+}
+
+html {
+  background: var(--context-bg);
+}
+
+body {
+  background-color: var(--context-bg);
+  color: var(--text-color);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   LENIS — required boilerplate overrides
+   ========================================================================== */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   CUSTOM CURSOR
+   ========================================================================== */
+#cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--accent-color);
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  will-change: transform;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+/* ==========================================================================
+   HEADER / FOOTER — solid chrome bars, OUTSIDE the stack's visual area.
+   These are real bars with their own background (not mix-blend overlays
+   floating on top of full-bleed cards) — the stack is inset below/above
+   them, never covered by or covering them. Heights are fixed px values
+   because main.js reads these same two numbers to compute each card's
+   pin offset — keep HEADER_H / FOOTER_H in main.js in sync with these.
+   ========================================================================== */
+.site-header,
+.site-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  background-color: var(--context-bg);
+  color: #F9F9F7;
+}
+
+.site-header { top: 0; height: 72px; }
+.site-footer { bottom: 0; height: 48px; font-size: 0.75rem; }
+
+/* Brand mark sits dead-center in the header regardless of how long
+   "Menu" / "Enquire" render either side of it — space-between alone
+   only centers a middle child when its neighbors are equal width, so
+   it's pulled out of the flex flow and centered against the bar
+   itself instead. */
+.nav-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  /* Clickable — replays the card 01 intro sequence (see main.js). Not
+     a navigation link, so cursor:pointer signals "does something"
+     without implying it goes anywhere. */
+  cursor: pointer;
+}
+
+/* Shared styling for all four corner nav elements — Menu / Enquire
+   (header) and Instagram / Contact (footer). Real buttons/links, so
+   they get a visible interactive state rather than just sitting as
+   static text. */
+.nav-link {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   ENQUIRE POPOVER
+   Drops down from either Enquire link (header or menu panel). Sits
+   above everything, including the menu overlay (z-index: 700 vs. its
+   600), so it works whether the menu is open or closed. Opacity/
+   transform/pointer-events are toggled by main.js via GSAP — the CSS
+   here only sets the closed resting state.
+   ========================================================================== */
+.enquire-popover {
+  position: fixed;
+  top: 72px; /* sits right under the header/menu-bar, same height value as .site-header */
+  right: clamp(1.5rem, 4vw, 3rem);
+  z-index: 700;
+  width: min(22rem, calc(100vw - 2 * clamp(1.5rem, 4vw, 3rem)));
+  background-color: #1a1a1a;
+  border: 1px solid rgba(249, 249, 247, 0.12);
+  border-top: none;
+  border-radius: 0 0 0.75rem 0.75rem;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+.enquire-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(249, 249, 247, 0.1);
+  color: var(--text-color);
+  text-align: left;
+  cursor: pointer;
+}
+
+.enquire-option:first-child { border-top: none; }
+
+.enquire-option:hover { background-color: rgba(249, 249, 247, 0.04); }
+
+.enquire-option-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.enquire-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.enquire-title {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+.enquire-tag {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+}
+
+/* "Your timezone" tag — only shown on whichever option is currently
+   selected (detected on load, or switched by clicking the other
+   option). Hidden by default; .is-selected reveals it. */
+.enquire-match-tag {
+  display: none;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  /* Accent as the fill, not the text color — Imperial Tyrian is too
+     dark/low-contrast to read as text at this size (same issue as the
+     menu's cursor dot), but works fine as a small solid chip. */
+  color: var(--text-color);
+  background-color: var(--accent-color);
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+  flex-shrink: 0;
+}
+
+.enquire-option.is-selected .enquire-match-tag { display: inline-block; }
+.enquire-option.is-selected .enquire-name { font-weight: 600; }
+
+/* ==========================================================================
+   MENU PANEL
+   Full-viewport overlay opened by the header's Menu button. Sits above
+   everything (z-index: 600, higher than the intro overlay's 500 — the
+   two never show at once in practice, but the menu should win if they
+   did). Its own top bar reuses .site-header's styling directly (see
+   markup: class="menu-bar site-header") so Close/mark/Enquire land
+   pixel-for-pixel where Menu/mark/Enquire sit on the real header.
+   Opacity/pointer-events are toggled by main.js via GSAP, not a CSS
+   class, to match how the intro overlay animates.
+   ========================================================================== */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  background-color: #111111;
+  color: var(--text-color);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Thin rule under the bar — one more thing worth borrowing from the
+   dental-clinic reference, separating Close/mark/Enquire from the
+   list below rather than letting them run together. */
+.menu-bar {
+  border-bottom: 1px solid rgba(249, 249, 247, 0.12);
+}
+
+/* Four items split the full height below the bar evenly — still big,
+   still filling the screen rather than sitting as a short spaced-out
+   list — but each is now a structured row (thumbnail, label, index)
+   with a divider beneath it, not a bare overlapping word. */
+.menu-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 72px; /* clears the fixed .menu-bar (same height as .site-header) */
+}
+
+.menu-item {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  padding: 0 clamp(1.5rem, 6vw, 4rem);
+  border-bottom: 1px solid rgba(249, 249, 247, 0.12);
+  text-decoration: none;
+  color: inherit;
+}
+
+.menu-item:first-child {
+  border-top: 1px solid rgba(249, 249, 247, 0.12);
+}
+
+/* Flat color swatch standing in for a real thumbnail — see the HTML
+   comment above the markup for why this isn't footage. Alternates
+   the two palette tones so the list still reads with some rhythm. */
+.menu-item-thumb {
+  flex-shrink: 0;
+  width: clamp(4.5rem, 7vw, 6.5rem);
+  height: clamp(3.25rem, 5vw, 4.5rem);
+  border-radius: 0.5rem;
+  background-color: var(--accent-color);
+  transition: transform 0.3s ease;
+}
+
+.menu-item:nth-child(even) .menu-item-thumb {
+  background-color: #2a2a2a;
+}
+
+.menu-item-label {
+  flex: 1;
+  font-family: var(--font-display);
+  font-weight: 600;
+  /* Scales with viewport height, not just width, so it keeps filling
+     each row whether the window is short and wide or tall and narrow
+     — clamped so it never gets absurd at extreme sizes. */
+  font-size: clamp(2.5rem, 9vh, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  color: inherit;
+  transition: color 0.25s ease;
+}
+
+.menu-item-index {
+  flex-shrink: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.8rem;
+  opacity: 0.55;
+}
+
+/* Hover/focus: label shifts to the accent color (not just dimmer) and
+   the thumbnail nudges in slightly — matches the reference's active-
+   row color swap, kept on-palette. */
+.menu-item:hover .menu-item-label,
+.menu-item:focus-visible .menu-item-label {
+  color: var(--accent-color);
+}
+
+.menu-item:hover .menu-item-thumb,
+.menu-item:focus-visible .menu-item-thumb {
+  transform: scale(1.04);
+}
+
+/* Follows the cursor directly while a row is hovered (same
+   quickSetter-driven technique as #cursor, just scoped to the menu —
+   simpler and more robust than anchoring to row position, which would
+   fight the alternating left/right alignment above). */
+.menu-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform, opacity;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+/* ==========================================================================
+   CARD STACK
+   The stage sits strictly between the header and footer bars — it never
+   extends under either. Each card is shorter than the viewport (not
+   100vh) and gets rounded top corners, so it reads as a card sliding
+   up into a frame rather than a full-bleed panel. .stack has no fixed
+   height of its own — its height is the sum of its children's natural
+   heights, which is what gives ScrollTrigger room to pin/release each
+   card in sequence.
+   ========================================================================== */
+.stack {
+  position: relative;
+  width: 100%;
+}
+
+.stack-card {
+  position: relative;
+  /* Horizontal inset — card floats within the stage rather than running
+     edge-to-edge, matching the reference's proportions. Keep CARD_INSET_VW
+     roughly in sync with main.js if the peek math ever needs it (it
+     currently doesn't — only vertical values matter for pinning). */
+  width: calc(100% - 2 * clamp(2rem, 8vw, 6rem));
+  margin-inline: auto;
+  /* Inset stage: fills the viewport minus header + footer + the extra
+     top/bottom breathing room (STAGE_GAP in main.js) — a pinned card's
+     fixed position (wherever its pin offset lands it) never reaches
+     under either bar, and never touches the viewport edges either. */
+  height: calc(100vh - 72px - 48px - 2 * 32px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border-radius: 1.75rem;
+  overflow: hidden;
+  transform-origin: center top;
+  will-change: transform, filter;
+  /* subtle lift so the stacking depth reads even before animation starts */
+  box-shadow: 0 -1.5rem 3rem rgba(0, 0, 0, 0.4);
+}
+
+/* Background video layer — sits behind everything else in the card.
+   object-fit: cover + the card's own overflow:hidden/border-radius
+   means the video is clipped to the rounded card shape automatically,
+   no extra masking needed. Muted/autoplay/loop/playsinline is required
+   for autoplay to be allowed by browsers at all. */
+.card-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Tints the video with the card's own theme color so cards with and
+   without video still read as one consistent palette, and keeps text
+   legible over footage of any brightness. */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bg-color);
+  opacity: 0.55;
+  z-index: 1;
+}
+
+.card-index,
+.card-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.card-inner {
+  max-width: 48rem;
+  width: 100%;
+  padding: clamp(1.5rem, 6vw, 4rem);
+  text-align: center;
+}
+
+.card-eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+  margin-bottom: 1rem;
+}
+
+.card-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.5rem, 4vw + 1rem, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.card-heading em {
+  font-style: italic;
+}
+
+.card-sub {
+  margin-top: 1.25rem;
+  font-size: clamp(1rem, 0.5vw + 0.85rem, 1.15rem);
+  opacity: 0.75;
+}
+
+/* Pagination numerals — pinned to the card's own edges, mirrors the
+   02 / 06-style counter seen in the reference. */
+.card-index {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.card-index--left { left: clamp(1.5rem, 4vw, 3rem); }
+.card-index--right { right: clamp(1.5rem, 4vw, 3rem); }
+
+/* ==========================================================================
+   INTRO OVERLAY
+   Full-viewport takeover on load — sits above the header/footer bars
+   (z-index: 500 vs. their 200) and the entire stack, hiding the real
+   site underneath completely. A short line-by-line reveal plays, then
+   main.js fades the whole overlay out to reveal the site as normal —
+   nothing on the page beneath needs its own hidden/reveal state, since
+   the overlay already covers it.
+   ========================================================================== */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #111111;
+  color: #F9F9F7;
+}
+
+.intro-sequence {
+  max-width: 44rem;
+  width: 100%;
+  padding: clamp(1.5rem, 6vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9em;
+  text-align: center;
+}
+
+.intro-line {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(1.1rem, 1.4vw + 0.8rem, 1.75rem);
+  line-height: 1.3;
+  opacity: 0.22;
+}
+
+/* ==========================================================================
+   CONTENT PAGES — About, Services
+   Ordinary scrolling pages (no pinned card stack), sharing the same
+   header/footer/menu/enquire chrome as the homepage. padding-top on
+   the hero clears the fixed header; padding-bottom on main clears the
+   fixed footer. Obsidian throughout — no new colors introduced.
+   ========================================================================== */
+.page-main {
+  padding-bottom: clamp(4rem, 8vh, 6rem);
+}
+
+.page-hero {
+  max-width: 56rem;
+  padding: clamp(7rem, 16vh, 10rem) clamp(1.5rem, 6vw, 4rem) clamp(2.5rem, 5vh, 4rem);
+}
+
+.page-eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.6;
+  margin-bottom: 1rem;
+}
+
+.page-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.25rem, 3vw + 1.25rem, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.page-heading em { font-style: italic; }
+
+.page-sub {
+  margin-top: 1.25rem;
+  max-width: 38rem;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.4vw + 0.9rem, 1.2rem);
+  opacity: 0.75;
+  line-height: 1.6;
+}
+
+.page-section {
+  max-width: 56rem;
+  padding: 0 clamp(1.5rem, 6vw, 4rem) clamp(2.5rem, 5vh, 4rem);
+}
+
+.page-section p {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.8;
+  margin-bottom: 1.25rem;
+  max-width: 42rem;
+}
+
+.page-section p:last-child { margin-bottom: 0; }
+
+.focus-section .page-eyebrow { margin-bottom: 1.25rem; }
+
+.focus-list {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  max-width: 42rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.focus-list li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+.focus-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+}
+
+/* Team */
+.team-section .page-eyebrow { margin-bottom: 1.5rem; }
+
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.team-card {
+  flex: 1 1 14rem;
+  padding: 1.75rem;
+  border: 1px solid rgba(249, 249, 247, 0.12);
+  border-radius: 0.75rem;
+}
+
+.team-name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.75rem;
+}
+
+.team-title {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.team-scope {
+  margin-top: 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+
+.team-bio {
+  margin-top: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.65;
+}
+
+/* Services */
+.services-list {
+  max-width: 56rem;
+}
+
+.service-row {
+  padding: clamp(1.75rem, 4vh, 3rem) 0;
+  border-bottom: 1px solid rgba(249, 249, 247, 0.12);
+}
+
+.service-row:first-child {
+  border-top: 1px solid rgba(249, 249, 247, 0.12);
+}
+
+.service-index {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  opacity: 0.5;
+  margin-bottom: 0.75rem;
+}
+
+.service-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 1.6vw + 1rem, 2.5rem);
+  line-height: 1.1;
+}
+
+.service-tagline {
+  margin-top: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.service-body {
+  margin-top: 1rem;
+  max-width: 40rem;
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  line-height: 1.7;
+  opacity: 0.8;
+}

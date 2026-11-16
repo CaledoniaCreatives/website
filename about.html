@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — CALEDONIA CREATIVES</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="/src/index.css" />
+</head>
+<body>
+
+  <!-- Custom cursor target. Positioned via gsap.quickSetter only. -->
+  <div id="cursor" aria-hidden="true"></div>
+
+  <!--
+    Same four-corner nav as the homepage. No intro overlay here — that
+    only plays on first load at "/". The brand mark is a real link
+    back to the homepage on inner pages (on "/" it's a button that
+    replays the intro instead — see main.js, it only wires the replay
+    behavior when #intro-overlay exists on the page).
+  -->
+  <header class="site-header">
+    <button class="nav-link" type="button" id="menu-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <a class="nav-mark" href="/">CALEDONIA CREATIVES</a>
+    <a class="nav-link" href="#" id="enquire-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="enquire-popover">Enquire</a>
+  </header>
+
+  <div class="enquire-popover" id="enquire-popover" aria-hidden="true">
+    <button class="enquire-option" type="button" data-region="us">
+      <span class="enquire-option-head">
+        <span class="enquire-name">Ryan</span>
+        <span class="enquire-match-tag">Your timezone</span>
+      </span>
+      <span class="enquire-title">Director, US</span>
+      <span class="enquire-tag">US / Americas</span>
+    </button>
+    <button class="enquire-option" type="button" data-region="uk">
+      <span class="enquire-option-head">
+        <span class="enquire-name">Harley</span>
+        <span class="enquire-match-tag">Your timezone</span>
+      </span>
+      <span class="enquire-title">Director, Europe</span>
+      <span class="enquire-tag">UK / Europe</span>
+    </button>
+  </div>
+
+  <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
+    <div class="menu-bar site-header">
+      <button class="nav-link" type="button" id="menu-close">Close</button>
+      <a class="nav-mark" href="/">CALEDONIA CREATIVES</a>
+      <a class="nav-link" href="#" id="enquire-trigger-menu" aria-haspopup="true" aria-expanded="false" aria-controls="enquire-popover">Enquire</a>
+    </div>
+
+    <nav class="menu-list" aria-label="Site sections">
+      <a class="menu-item" href="/about.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">About</span>
+        <span class="menu-item-index">01</span>
+      </a>
+      <a class="menu-item" href="/services.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Services</span>
+        <span class="menu-item-index">02</span>
+      </a>
+      <a class="menu-item" href="#" data-menu-item>
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Work</span>
+        <span class="menu-item-index">03</span>
+      </a>
+      <a class="menu-item" href="#" data-menu-item>
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Contact</span>
+        <span class="menu-item-index">04</span>
+      </a>
+    </nav>
+
+    <div class="menu-dot" id="menu-dot" aria-hidden="true"></div>
+  </div>
+
+  <main class="page-main">
+
+    <!--
+      HERO / MISSION — expands the specialization statement from the
+      homepage's card 01 and the intro sequence's brand voice. Draft
+      copy, not yet confirmed.
+    -->
+    <section class="page-hero">
+      <span class="page-eyebrow">About</span>
+      <h1 class="page-heading">We build advertising with AI. <em>Not the other way around.</em></h1>
+      <p class="page-sub">Caledonia Creatives exists for one reason: high-ticket service businesses don't get the same quality of advertising as consumer brands, because the traditional production model doesn't make sense at their scale. We built an agency around AI production specifically to close that gap.</p>
+    </section>
+
+    <section class="page-section">
+      <p>We don't spread across every industry. We specialize in businesses selling considered, high-value services — the kind where one right customer is worth more than a hundred wrong ones, and the advertising has to reflect that. A generic ad optimized for clicks doesn't work on a buyer weighing a five- or six-figure decision.</p>
+      <p>That specialization is what AI production actually buys you here: not cheaper ads, but the ability to produce, test, and refine advertising concepts at a pace and cost that a traditional shoot-based model can't match — without lowering the bar on what the work looks like.</p>
+    </section>
+
+    <!--
+      CURRENT FOCUS — high-ticket home improvement is a vertical inside
+      the broader "high-ticket service business" positioning above, not
+      a separate one: it's where the bulk of the work actually sits
+      right now, so it's worth naming concretely rather than staying
+      abstract. Draft copy, not yet confirmed — written close to how
+      you described the offer, not padded out.
+    -->
+    <section class="page-section focus-section">
+      <span class="page-eyebrow">Where most of the work is, right now</span>
+      <p>In practice, that's high-ticket home improvement — pools, saunas, home lifts, basement conversions. Same long sales cycle, same big price tag, same need for advertising that doesn't look like a generic small-business template. For a business in that space, the offer is usually:</p>
+      <ul class="focus-list">
+        <li>Their current underperforming ad, remade with better production — same angle and hook, so it's not a guess, it's a proven starting point executed properly.</li>
+        <li>Ad creative made with AI production instead of a traditional camera crew and editor — faster to produce, and cheap enough to make multiple versions of, which matters when testing creative without a big production budget each time.</li>
+        <li>Content built specifically for long-sales-cycle, high-ticket buyers, not adapted from a generic small-business ad template.</li>
+      </ul>
+      <p>Alongside the creative itself, that includes strategy and helping build the brand's voice — not just production.</p>
+    </section>
+
+    <!--
+      HOW WE WORK — substitutes for case studies, which don't exist
+      yet (said plainly below rather than skipped over). Process detail
+      instead of results, and kept realistic — no turnaround promise we
+      can't actually back up yet.
+    -->
+    <section class="page-section">
+      <span class="page-eyebrow">How we work</span>
+      <p>We don't have case studies to show yet — we're early, and we'd rather say that plainly than pretend otherwise. What we can tell you honestly is how the work actually gets made:</p>
+      <ul class="focus-list">
+        <li>A call to understand the business, the offer, and what's already been tried.</li>
+        <li>Competitor and market research, so the concept is built on what's actually happening — not a guess.</li>
+        <li>Multiple creative directions produced with AI, not one ad — so there's something to actually test.</li>
+        <li>A review and refinement pass before anything reaches you, so the bar stays high even though it's AI-produced.</li>
+        <li>Delivery in the formats you need to run it — ready to go live.</li>
+      </ul>
+      <p>Turnaround is faster than a traditional shoot, because there's no camera crew or edit suite to schedule around — but we're not going to put a number on that we can't actually guarantee yet.</p>
+    </section>
+
+    <!--
+      ORIGIN — Ryan and Harley's own account of how this started, kept
+      to what was actually said, not embellished.
+    -->
+    <section class="page-section">
+      <span class="page-eyebrow">How this started</span>
+      <p>Ryan and Harley are friends turned business partners. We taught ourselves marketing running our own companies, and decided to put that knowledge to work for other businesses — which is how Caledonia Creatives started.</p>
+    </section>
+
+    <!--
+      GETTING STARTED — pricing/scope is bespoke (full breakdown lives
+      on the Services page); this is the light mention. 14-day trial as
+      the actual risk-reversal, not a vague guarantee.
+    -->
+    <section class="page-section">
+      <span class="page-eyebrow">Getting started</span>
+      <p>Every business is different, so pricing and scope aren't fixed — they're worked out on a call once we understand what you actually need (more on how that breaks down is on the <a href="services.html">Services</a> page). Every engagement starts with a 14-day trial, so you can see the work before committing to anything longer.</p>
+    </section>
+
+    <!--
+      TEAM — names, titles and regional scope exactly as given (Ryan:
+      everything US-based; Harley: everything Europe-based). Ryan's
+      line below is drawn from what's actually known about him
+      (Movara, Kilted Watch Company) — Harley's bio is still pending,
+      so his card stays as-is rather than getting something invented.
+    -->
+    <section class="page-section team-section">
+      <span class="page-eyebrow">Who runs it</span>
+      <div class="team-grid">
+        <div class="team-card">
+          <span class="team-name">Ryan</span>
+          <span class="team-title">Director, US</span>
+          <p class="team-scope">Oversees everything US-based.</p>
+          <p class="team-bio">Founded Movara, a mid-term rental marketplace, and co-owns Kilted Watch Company — taught himself marketing running both.</p>
+        </div>
+        <div class="team-card">
+          <span class="team-name">Harley</span>
+          <span class="team-title">Director, Europe</span>
+          <p class="team-scope">Oversees everything Europe-based.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <a class="nav-link" href="#">Instagram</a>
+    <a class="nav-link" href="#">Contact</a>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — CALEDONIA CREATIVES</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="/src/index.css" />
+</head>
+<body>
+
+  <!-- Custom cursor target. Positioned via gsap.quickSetter only. -->
+  <div id="cursor" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <button class="nav-link" type="button" id="menu-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <a class="nav-mark" href="/">CALEDONIA CREATIVES</a>
+    <a class="nav-link" href="#" id="enquire-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="enquire-popover">Enquire</a>
+  </header>
+
+  <div class="enquire-popover" id="enquire-popover" aria-hidden="true">
+    <button class="enquire-option" type="button" data-region="us">
+      <span class="enquire-option-head">
+        <span class="enquire-name">Ryan</span>
+        <span class="enquire-match-tag">Your timezone</span>
+      </span>
+      <span class="enquire-title">Director, US</span>
+      <span class="enquire-tag">US / Americas</span>
+    </button>
+    <button class="enquire-option" type="button" data-region="uk">
+      <span class="enquire-option-head">
+        <span class="enquire-name">Harley</span>
+        <span class="enquire-match-tag">Your timezone</span>
+      </span>
+      <span class="enquire-title">Director, Europe</span>
+      <span class="enquire-tag">UK / Europe</span>
+    </button>
+  </div>
+
+  <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
+    <div class="menu-bar site-header">
+      <button class="nav-link" type="button" id="menu-close">Close</button>
+      <a class="nav-mark" href="/">CALEDONIA CREATIVES</a>
+      <a class="nav-link" href="#" id="enquire-trigger-menu" aria-haspopup="true" aria-expanded="false" aria-controls="enquire-popover">Enquire</a>
+    </div>
+
+    <nav class="menu-list" aria-label="Site sections">
+      <a class="menu-item" href="/about.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">About</span>
+        <span class="menu-item-index">01</span>
+      </a>
+      <a class="menu-item" href="/services.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Services</span>
+        <span class="menu-item-index">02</span>
+      </a>
+      <a class="menu-item" href="#" data-menu-item>
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Work</span>
+        <span class="menu-item-index">03</span>
+      </a>
+      <a class="menu-item" href="#" data-menu-item>
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Contact</span>
+        <span class="menu-item-index">04</span>
+      </a>
+    </nav>
+
+    <div class="menu-dot" id="menu-dot" aria-hidden="true"></div>
+  </div>
+
+  <main class="page-main">
+
+    <section class="page-hero">
+      <span class="page-eyebrow">Services</span>
+      <h1 class="page-heading">What we actually do. <em>In detail.</em></h1>
+      <p class="page-sub">Five pillars, same ones on the homepage — here's what each one actually involves. Draft copy, not yet confirmed.</p>
+    </section>
+
+    <section class="page-section">
+      <div class="services-list">
+
+        <article class="service-row">
+          <span class="service-index">01</span>
+          <h2 class="service-name">Competitor Intelligence</h2>
+          <p class="service-tagline">You understand what the market is doing before creating ads.</p>
+          <p class="service-body">Before a single concept is drafted, we map the competitive landscape — what's running, what's working, where the gaps are. That intelligence becomes the brief, not a guess at what might land.</p>
+        </article>
+
+        <article class="service-row">
+          <span class="service-index">02</span>
+          <h2 class="service-name">Creative Strategy</h2>
+          <p class="service-tagline">You develop concepts around the customer's buying motivations.</p>
+          <p class="service-body">High-ticket decisions aren't impulse buys. We build concepts around the real reasons your customer commits — the risk they're weighing, the outcome they're buying, the objection that's actually stopping them — not generic hooks borrowed from consumer advertising.</p>
+        </article>
+
+        <article class="service-row">
+          <span class="service-index">03</span>
+          <h2 class="service-name">AI Creative Production</h2>
+          <p class="service-tagline">You deliver professional advertising without traditional production costs and timelines.</p>
+          <p class="service-body">We produce ad creative using AI production tools, cutting the cost and turnaround of a traditional shoot without cutting the craft. Same creative bar, a fraction of the time and spend.</p>
+        </article>
+
+        <article class="service-row">
+          <span class="service-index">04</span>
+          <h2 class="service-name">Continuous Creative Testing</h2>
+          <p class="service-tagline">You give clients multiple approaches to test, rather than one finished advert.</p>
+          <p class="service-body">Instead of betting a campaign on one finished advert, we produce multiple creative directions in parallel and let the market decide which one earns the spend — testing is built into the process, not an afterthought.</p>
+        </article>
+
+        <article class="service-row">
+          <span class="service-index">05</span>
+          <h2 class="service-name">Performance-Led Optimisation</h2>
+          <p class="service-tagline">You use actual campaign feedback to inform future creative.</p>
+          <p class="service-body">Every campaign generates data on what actually worked — not just what we assumed would. That performance feedback feeds directly into the next round of creative, so the work keeps getting sharper the longer we work together.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!--
+      PRICING & PROCESS — bespoke, decided on a call, not a fixed
+      rate card. The 14-day trial is the actual risk-reversal.
+    -->
+    <section class="page-section">
+      <span class="page-eyebrow">Pricing &amp; process</span>
+      <p>None of this is a fixed package. Every business's needs are different, so scope and pricing get worked out on a call once we understand what you're actually trying to do — not quoted off a rate card before we know anything about your business.</p>
+      <p>Every engagement starts with a 14-day trial, so you see the work before committing to anything longer.</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <a class="nav-link" href="#">Instagram</a>
+    <a class="nav-link" href="#">Contact</a>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

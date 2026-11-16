@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CALEDONIA CREATIVES — Engine</title>
+
+  <!-- Font pairing A, confirmed: Fraunces (display) / Inter (body) — both real Google Fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="/src/index.css" />
+</head>
+<body>
+
+  <!--
+    Lenis manages window scroll physics directly (no wrapper/content
+    scroll-container mode — that pattern requires explicit height +
+    overflow CSS on the wrapper to function, which adds a failure mode
+    for no benefit here since the whole page scrolls, not an inner
+    panel). GSAP ScrollTrigger reads position via Lenis's own loop
+    (wired in main.js); no native `scroll` listener exists anywhere in
+    this codebase.
+  -->
+
+  <!-- Custom cursor target. Positioned via gsap.quickSetter only. -->
+  <div id="cursor" aria-hidden="true"></div>
+
+  <!--
+    INTRO OVERLAY — full-viewport takeover on load, covering header,
+    footer and the stack entirely (fixed, above everything else).
+    Lines cycle one bright/rest dim, then the whole thing fades out to
+    reveal the real site underneath — matches the reference's opening
+    beat rather than being baked into card 01. Draft copy, not yet
+    confirmed. Click the brand mark once the site is visible to replay it.
+  -->
+  <div class="intro-overlay" id="intro-overlay">
+    <div class="intro-sequence">
+      <p class="intro-line">We're not a studio.</p>
+      <p class="intro-line">We're not an agency you've seen before.</p>
+      <p class="intro-line">We build advertising with AI, for businesses that can't afford to look like everyone else.</p>
+      <p class="intro-line">This is Caledonia Creatives.</p>
+    </div>
+  </div>
+
+  <!--
+    SAFETY NET — the overlay above is opaque and full-viewport by
+    default in CSS (display:flex, no opacity/pointer-events set), so
+    the page is only interactive once main.js's GSAP timeline fades it
+    out. That's a single point of failure: if the module script is
+    slow, blocked, or errors for any reason, a visitor is stuck
+    looking at frozen intro text forever with no way to reach the
+    site underneath. This plain (non-module) script is independent of
+    main.js entirely — it force-hides the overlay after a timeout no
+    matter what, so a JS failure degrades to "intro skipped" instead
+    of "site unusable". !important wins over anything GSAP sets via
+    inline style, so there's no fight between the two once this fires.
+  -->
+  <script>
+    (function () {
+      var FALLBACK_MS = 5000;
+      window.setTimeout(function () {
+        var el = document.getElementById("intro-overlay");
+        if (!el) return;
+        el.style.setProperty("opacity", "0", "important");
+        el.style.setProperty("pointer-events", "none", "important");
+        el.style.setProperty("display", "none", "important");
+      }, FALLBACK_MS);
+    })();
+  </script>
+
+  <!--
+    Four-corner nav, matching the reference: Menu / brand mark (center,
+    not a link) / Enquire up top, two more corners in the footer below.
+    All four are real focusable elements — none has a destination built
+    yet (no menu panel, no contact flow), so each is href="#" for now.
+  -->
+  <header class="site-header">
+    <button class="nav-link" type="button" id="menu-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <span class="nav-mark">CALEDONIA CREATIVES</span>
+    <a class="nav-link" href="#" id="enquire-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="enquire-popover">Enquire</a>
+  </header>
+
+  <!--
+    ENQUIRE POPOVER — opens from either Enquire link (header or menu
+    panel share this one popover). Two regional contacts — Ryan runs
+    everything US-based, Harley everything Europe-based. No surname
+    invented for Harley since none was given.
+    The contact matching the visitor's detected timezone is marked
+    "Your timezone" on load; clicking the other one switches the mark.
+    Still no real email/calendar behind either — same placeholder
+    status as the rest of the site's nav — this only decides which
+    name/title a visitor would see once that's wired up.
+  -->
+  <div class="enquire-popover" id="enquire-popover" aria-hidden="true">
+    <button class="enquire-option" type="button" data-region="us">
+      <span class="enquire-option-head">
+        <span class="enquire-name">Ryan</span>
+        <span class="enquire-match-tag">Your timezone</span>
+      </span>
+      <span class="enquire-title">Director, US</span>
+      <span class="enquire-tag">US / Americas</span>
+    </button>
+    <button class="enquire-option" type="button" data-region="uk">
+      <span class="enquire-option-head">
+        <span class="enquire-name">Harley</span>
+        <span class="enquire-match-tag">Your timezone</span>
+      </span>
+      <span class="enquire-title">Director, Europe</span>
+      <span class="enquire-tag">UK / Europe</span>
+    </button>
+  </div>
+
+  <!--
+    MENU PANEL — full-viewport overlay, opened by the header's Menu
+    button. Reuses .site-header's own bar styling for its top row so
+    Close/mark/Enquire land in exactly the same spot the real header's
+    Menu/mark/Enquire do — visually it reads as the Menu label simply
+    becoming Close, not a different bar appearing.
+
+    Items are placeholder site sections (About / Services / Work /
+    Contact) — the site is one scrolling page right now, not separate
+    pages, so these have nowhere to go yet. Each is href="#" and
+    currently just closes the menu; wire up real destinations once
+    those sections/pages exist.
+  -->
+  <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
+    <div class="menu-bar site-header">
+      <button class="nav-link" type="button" id="menu-close">Close</button>
+      <span class="nav-mark">CALEDONIA CREATIVES</span>
+      <a class="nav-link" href="#" id="enquire-trigger-menu" aria-haspopup="true" aria-expanded="false" aria-controls="enquire-popover">Enquire</a>
+    </div>
+
+    <!--
+      Each row's thumbnail is a flat color swatch (alternating the two
+      palette tones), NOT real imagery — none of these four sections
+      have footage yet, and reusing a pillar card's video here would
+      misleadingly imply it represents that section. Swap these for
+      real stills/clips once each has its own.
+
+      About and Services now point at real pages (data-menu-item is
+      dropped from those two so main.js's generic "href=# → close the
+      menu instead of navigating" handler leaves them alone). Work and
+      Contact are still placeholders.
+    -->
+    <nav class="menu-list" aria-label="Site sections">
+      <a class="menu-item" href="/about.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">About</span>
+        <span class="menu-item-index">01</span>
+      </a>
+      <a class="menu-item" href="/services.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Services</span>
+        <span class="menu-item-index">02</span>
+      </a>
+      <a class="menu-item" href="#" data-menu-item>
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Work</span>
+        <span class="menu-item-index">03</span>
+      </a>
+      <a class="menu-item" href="#" data-menu-item>
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Contact</span>
+        <span class="menu-item-index">04</span>
+      </a>
+    </nav>
+
+    <!-- Follows whichever row is hovered. Imperial Tyrian, not the
+         reference's yellow — staying on the confirmed 2-color palette. -->
+    <div class="menu-dot" id="menu-dot" aria-hidden="true"></div>
+  </div>
+
+  <main id="main">
+
+    <!--
+      CARD STACK
+      Primary scroll mechanic. Each .stack-card is pinned in place as
+      the next card scrolls up over it; main.js scales/dims the
+      outgoing card as the incoming one arrives, producing the
+      layered "deck" effect. Palette is strictly two-tone —
+      Obsidian Black and Imperial Tyrian — no light panel.
+    -->
+    <section class="stack" id="stack">
+
+      <article class="stack-card" data-theme="dark" data-index="01">
+        <video class="card-video" autoplay loop muted playsinline poster="">
+          <source src="/video/01-specialization.mp4" type="video/mp4" />
+        </video>
+        <div class="card-overlay"></div>
+        <span class="card-index card-index--left">01</span>
+        <span class="card-index card-index--right">06</span>
+        <div class="card-inner">
+          <span class="card-eyebrow">Specialization</span>
+          <h1 class="card-heading">Built for high-ticket service businesses. <em>Not everyone.</em></h1>
+          <p class="card-sub">We don't spread across every industry — we specialize in businesses selling considered, high-value services, where one right customer is worth more than a hundred wrong ones.</p>
+        </div>
+      </article>
+
+      <!-- No matching footage sourced yet for this pillar — flat theme color, no video, until client-sourced clip arrives. -->
+      <article class="stack-card" data-theme="purple" data-index="02">
+        <span class="card-index card-index--left">02</span>
+        <span class="card-index card-index--right">06</span>
+        <div class="card-inner">
+          <span class="card-eyebrow">Competitor Intelligence</span>
+          <h1 class="card-heading">We know the market <em>before</em> we make a single ad.</h1>
+          <p class="card-sub">Competitor intelligence informs every concept before production starts.</p>
+        </div>
+      </article>
+
+      <article class="stack-card" data-theme="dark" data-index="03">
+        <video class="card-video" autoplay loop muted playsinline poster="">
+          <source src="/video/03-strategy.mp4" type="video/mp4" />
+        </video>
+        <div class="card-overlay"></div>
+        <span class="card-index card-index--left">03</span>
+        <span class="card-index card-index--right">06</span>
+        <div class="card-inner">
+          <span class="card-eyebrow">Creative Strategy</span>
+          <h1 class="card-heading">Built around <em>why</em> people buy, not what they scroll past.</h1>
+          <p class="card-sub">Concepts developed around your customer's actual buying motivations.</p>
+        </div>
+      </article>
+
+      <article class="stack-card" data-theme="purple" data-index="04">
+        <video class="card-video" autoplay loop muted playsinline poster="">
+          <source src="/video/04-production.mp4" type="video/mp4" />
+        </video>
+        <div class="card-overlay"></div>
+        <span class="card-index card-index--left">04</span>
+        <span class="card-index card-index--right">06</span>
+        <div class="card-inner">
+          <span class="card-eyebrow">AI Creative Production</span>
+          <h1 class="card-heading">Studio-grade ads. <em>Without</em> the studio costs or timeline.</h1>
+          <p class="card-sub">Professional advertising production, built with AI — not the traditional budget or schedule.</p>
+        </div>
+      </article>
+
+      <!-- Weak content fit (generic code-editor footage, not ad-variant testing) — placeholder per client instruction, flagged for replacement. -->
+      <article class="stack-card" data-theme="dark" data-index="05">
+        <video class="card-video" autoplay loop muted playsinline poster="">
+          <source src="/video/05-testing.mp4" type="video/mp4" />
+        </video>
+        <div class="card-overlay"></div>
+        <span class="card-index card-index--left">05</span>
+        <span class="card-index card-index--right">06</span>
+        <div class="card-inner">
+          <span class="card-eyebrow">Continuous Creative Testing</span>
+          <h1 class="card-heading">Not one ad. <em>Several</em>, running against each other.</h1>
+          <p class="card-sub">Multiple creative approaches tested in parallel, not a single finished advert.</p>
+        </div>
+      </article>
+
+      <article class="stack-card" data-theme="purple" data-index="06">
+        <video class="card-video" autoplay loop muted playsinline poster="">
+          <source src="/video/06-optimisation.mp4" type="video/mp4" />
+        </video>
+        <div class="card-overlay"></div>
+        <span class="card-index card-index--left">06</span>
+        <span class="card-index card-index--right">06</span>
+        <div class="card-inner">
+          <span class="card-eyebrow">Performance-Led Optimisation</span>
+          <h1 class="card-heading">Every campaign <em>teaches</em> the next one.</h1>
+          <p class="card-sub">Real performance data feeds directly back into what we create next.</p>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <!--
+    Bottom two corners of the four-corner nav. Labels are a default,
+    not yet confirmed with the client — Instagram (bottom-left) and
+    Contact (bottom-right). One-line fix if they want different labels
+    or destinations; both are href="#" until a real destination exists.
+  -->
+  <footer class="site-footer">
+    <a class="nav-link" href="#">Instagram</a>
+    <a class="nav-link" href="#">Contact</a>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
