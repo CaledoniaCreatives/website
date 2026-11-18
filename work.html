@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work — CALEDONIA CREATIVES</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="/src/index.css" />
+</head>
+<body>
+
+  <!-- Custom cursor target. Positioned via gsap.quickSetter only. -->
+  <div id="cursor" aria-hidden="true"></div>
+
+  <!--
+    Same four-corner nav as the homepage. No intro overlay here — that
+    only plays on first load at "/". The brand mark is a real link
+    back to the homepage on inner pages.
+  -->
+  <header class="site-header">
+    <button class="nav-link" type="button" id="menu-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <a class="nav-mark" href="/">CALEDONIA CREATIVES</a>
+    <a class="nav-link" href="#" id="enquire-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="enquire-popover">Enquire</a>
+  </header>
+
+  <div class="enquire-popover" id="enquire-popover" aria-hidden="true">
+    <button class="enquire-option" type="button" data-region="us" data-email="rmitchell@caledoniacreatives.com">
+      <span class="enquire-option-head">
+        <span class="enquire-name">Ryan</span>
+        <span class="enquire-match-tag">Your timezone</span>
+      </span>
+      <span class="enquire-title">Director, US</span>
+      <span class="enquire-tag">US / Americas</span>
+    </button>
+    <button class="enquire-option" type="button" data-region="uk" data-email="hreynolds@caledoniacreatives.com">
+      <span class="enquire-option-head">
+        <span class="enquire-name">Harley</span>
+        <span class="enquire-match-tag">Your timezone</span>
+      </span>
+      <span class="enquire-title">Director, Europe</span>
+      <span class="enquire-tag">UK / Europe</span>
+    </button>
+  </div>
+
+  <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
+    <div class="menu-bar site-header">
+      <button class="nav-link" type="button" id="menu-close">Close</button>
+      <a class="nav-mark" href="/">CALEDONIA CREATIVES</a>
+      <a class="nav-link" href="#" id="enquire-trigger-menu" aria-haspopup="true" aria-expanded="false" aria-controls="enquire-popover">Enquire</a>
+    </div>
+
+    <nav class="menu-list" aria-label="Site sections">
+      <a class="menu-item" href="/about.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">About</span>
+        <span class="menu-item-index">01</span>
+      </a>
+      <a class="menu-item" href="/services.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Services</span>
+        <span class="menu-item-index">02</span>
+      </a>
+      <a class="menu-item" href="/work.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Work</span>
+        <span class="menu-item-index">03</span>
+      </a>
+      <a class="menu-item" href="/contact.html">
+        <span class="menu-item-thumb" aria-hidden="true"></span>
+        <span class="menu-item-label">Contact</span>
+        <span class="menu-item-index">04</span>
+      </a>
+    </nav>
+
+    <div class="menu-dot" id="menu-dot" aria-hidden="true"></div>
+  </div>
+
+  <main class="page-main">
+
+    <section class="page-hero">
+      <span class="page-eyebrow">Work</span>
+      <h1 class="page-heading">Selected work.</h1>
+      <p class="page-sub">We're early — this is where finished projects will live. First ones landing soon.</p>
+    </section>
+
+    <!--
+      WORK GRID — ready to use, nothing rendered yet. No fabricated
+      placeholder projects: the honest state below says plainly
+      there's nothing to show yet. Drop real projects in as a
+      .work-item inside .work-grid using this markup once there's
+      actual finished work to show, and delete the .work-empty block:
+
+      <div class="work-grid">
+        <article class="work-item">
+          <div class="work-item-thumb"></div>
+          <div class="work-item-body">
+            <span class="work-item-tag">Client type / industry</span>
+            <span class="work-item-name">Project name</span>
+            <p class="work-item-blurb">One or two lines on what was made and the result, if there's a real one to report.</p>
+          </div>
+        </article>
+      </div>
+    -->
+    <section class="page-section">
+      <div class="work-empty">
+        <p>Nothing to show here yet — we're working with our first clients now, and real projects will appear here as they wrap.</p>
+        <p>Want to be one of the first? <a href="contact.html">Get in touch</a>.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <a class="nav-link" href="#">Instagram</a>
+    <a class="nav-link" href="/contact.html">Contact</a>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

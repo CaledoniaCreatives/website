@@ -710,6 +710,82 @@ html.lenis body {
   opacity: 0.75;
 }
 
+/* ==========================================================================
+   WORK PAGE
+   The grid is built and ready — .work-item is a real, usable card
+   component (thumbnail, title, tag, blurb) — but no items are rendered
+   yet because there's no real finished work to show. An HTML comment
+   in work.html documents the markup to drop in once there is. Until
+   then the page shows an honest .work-empty state instead of
+   fabricated placeholder projects.
+   ========================================================================== */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 40rem) {
+  .work-grid { grid-template-columns: 1fr; }
+}
+
+.work-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(249, 249, 247, 0.12);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.work-item-thumb {
+  aspect-ratio: 16 / 9;
+  background-color: var(--accent-color);
+}
+
+.work-item-thumb:nth-child(even) {
+  background-color: #1a1a1a;
+}
+
+.work-item-body {
+  padding: 1.5rem;
+}
+
+.work-item-tag {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.work-item-name {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+.work-item-blurb {
+  margin-top: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.work-empty {
+  padding: 2.5rem;
+  border: 1px solid rgba(249, 249, 247, 0.12);
+  border-radius: 0.75rem;
+  text-align: left;
+}
+
+.work-empty p { margin: 0; }
+.work-empty p + p { margin-top: 0.75rem; }
+
 .team-bio {
   margin-top: 0.6rem;
   font-family: var(--font-body);
