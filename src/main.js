@@ -357,6 +357,11 @@ function initEnquire() {
       selectedRegion = opt.dataset.region;
       applySelection();
       closePopover();
+      // Real addresses are wired up now — clicking a name opens the
+      // visitor's mail client addressed to that person.
+      if (opt.dataset.email) {
+        window.location.href = `mailto:${opt.dataset.email}`;
+      }
     });
   });
 
@@ -372,6 +377,24 @@ function initEnquire() {
 }
 
 /* ==========================================================================
+   CONTACT PAGE
+   Static (non-popover) version of the same region-match pattern: marks
+   whichever .contact-card matches the visitor's detected timezone with
+   the same "Your timezone" tag the Enquire popover uses. No open/close
+   state needed — it's just two cards sitting in the page, each a real
+   mailto link (reuses detectRegion(), defined above for initEnquire).
+   Only runs when the page actually has .contact-card elements.
+   ========================================================================== */
+function initContactPage() {
+  const cards = document.querySelectorAll(".contact-card");
+  if (!cards.length) return;
+  const region = detectRegion();
+  cards.forEach((card) => {
+    card.classList.toggle("is-selected", card.dataset.region === region);
+  });
+}
+
+/* ==========================================================================
    BOOT
    ========================================================================== */
 function init() {
@@ -380,6 +403,7 @@ function init() {
   initCursor();
   initMenu();
   initEnquire();
+  initContactPage();
   ScrollTrigger.refresh();
 }
 

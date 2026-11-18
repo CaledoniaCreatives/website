@@ -239,8 +239,59 @@ html.lenis body {
   flex-shrink: 0;
 }
 
-.enquire-option.is-selected .enquire-match-tag { display: inline-block; }
-.enquire-option.is-selected .enquire-name { font-weight: 600; }
+.enquire-option.is-selected .enquire-match-tag,
+.contact-card.is-selected .enquire-match-tag { display: inline-block; }
+.enquire-option.is-selected .enquire-name,
+.contact-card.is-selected .enquire-name { font-weight: 600; }
+
+/* ==========================================================================
+   CONTACT PAGE
+   Page-scale version of the same two-contact pattern used in the
+   Enquire popover — bigger type, real mailto CTAs, no open/close
+   state. initContactPage() in main.js marks whichever .contact-card
+   matches the visitor's timezone with the same .is-selected /
+   "Your timezone" tag the popover uses, reusing .enquire-match-tag.
+   ========================================================================== */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 40rem) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 2rem;
+  border: 1px solid rgba(249, 249, 247, 0.12);
+  border-radius: 0.75rem;
+}
+
+.contact-card .enquire-option-head {
+  align-items: center;
+}
+
+.contact-card .enquire-name {
+  font-size: 1.6rem;
+}
+
+.contact-email {
+  display: inline-block;
+  margin-top: 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-color);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  opacity: 0.85;
+}
+
+.contact-email:hover { opacity: 1; }
 
 /* ==========================================================================
    MENU PANEL
